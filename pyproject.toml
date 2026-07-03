@@ -1,0 +1,125 @@
+[project]
+name = "adguardctl"
+version = "0.1.0"
+description = "Async CLI for managing an AdGuard Home instance"
+readme = "README.md"
+authors = [
+    { name = "Malcolm Jones", email = "bossjones@theblacktonystark.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.2",
+    "rich>=15.0.0",
+    "typer>=0.26.8",
+]
+
+[project.scripts]
+adguardctl = "adguardctl.cli.app:main"
+
+[build-system]
+requires = ["uv_build>=0.11.14,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "--cov=adguardctl --cov-report=term-missing"
+testpaths = ["tests"]
+markers = [
+    "integration: tests that hit a real AdGuard Home instance (needs compose)",
+    "slow: slow tests, skipped by default unless --slow is passed",
+]
+
+[tool.coverage.run]
+source = ["adguardctl"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "\\.\\.\\.",
+]
+fail_under = 85
+
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.basedpyright]
+# `ty` is the primary type checker; basedpyright is a secondary aid, so run it
+# in standard (not all-strict) mode to avoid fighting Pydantic/typer idioms.
+typeCheckingMode = "standard"
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"
+include = ["src", "tests"]
+reportExplicitAny = false
+reportUnannotatedClassAttribute = false
+reportAny = false
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN401",  # allow typing.Any in **kwargs-style seams
+    "D203",    # conflicts with D211
+    "D213",    # conflicts with D212
+    "D102",    # method docstrings: class docstrings document the area
+    "D105",    # magic-method docstrings not required
+    "D107",    # __init__ docstrings not required (documented on the class)
+    "COM812",  # handled by the formatter
+    "ISC001",  # handled by the formatter
+    "PLR2004", # magic values are fine in this CLI
+    "FBT001",  # typer commands use boolean flags as parameters
+    "FBT002",
+    "FBT003",  # boolean positional values are fine at call sites
+    "B008",    # typer.Option()/Argument() in defaults is the framework idiom
+    "TD002",   # TODO author not required
+    "TD003",   # TODO issue link not required
+    "FIX002",  # TODO comments are allowed
+    "TRY003",  # allow messages passed to exceptions
+    "EM101",   # allow string literals in exceptions
+    "EM102",   # allow f-strings in exceptions
+    "UP042",   # keep `str, Enum` for broad typer compatibility
+    "UP047",   # keep classic TypeVar generics
+    "TC001",   # typer/pydantic evaluate annotations at runtime
+    "TC002",
+    "TC003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S105", "S106", "SLF001", "PLR2004", "ANN", "D", "PT028"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["adguardctl"]
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.39.9",
+    "codespell>=2.4.2",
+    "funlog>=0.2.1",
+    "monkeytype>=23.3.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.15.1",
+    "pytest-recording>=0.13.4",
+    "pytest-retry>=1.7.0",
+    "pytest-skip-slow>=1.1.0",
+    "pytest-subprocess>=1.6.0",
+    "pytest-sugar>=1.1.1",
+    "pytest-timeout>=2.4.0",
+    "respx>=0.23.1",
+    "ruff>=0.15.20",
+    "ty>=0.0.56",
+]

@@ -1,0 +1,106 @@
+# Pre-seeded AdGuard Home config for integration tests.
+#
+# Derived from a live homelab instance via `adguardctl export`, then SANITIZED to
+# "public config only": filter lists, DNS tuning, safe search, blocked services,
+# and default blocked hosts are kept; internal upstreams/domains/IPs, persistent
+# clients, DNS rewrites, and access-list client IPs are dropped.
+#
+# Credentials are the TEST credentials (NOT the real ones): admin / test1234.
+# schema_version is intentionally pinned to 28 to match the pinned test image
+# (adguard/adguardhome:v0.107.52); AdGuard Home will migrate/rewrite on first run.
+http:
+  address: 0.0.0.0:3000
+users:
+  - name: admin
+    password: $2y$10$9BVgnjg36iNcb3mnzovTQuySK8GmG/aTmQvuY1hCjd1vuT/lYjLyC
+auth_attempts: 5
+block_auth_min: 15
+dns:
+  bind_hosts:
+    - 0.0.0.0
+  port: 53
+  # Recursive resolver (Unbound) per this repo's architecture. The real Mac-Mini
+  # deployment co-locates Unbound at 127.0.0.1:5335; in the compose test stack it
+  # is a separate container reachable at its static IP. Internal split-horizon
+  # upstreams from the source instance were removed.
+  upstream_dns:
+    - 172.28.0.53:5335
+  upstream_mode: parallel
+  bootstrap_dns:
+    - 9.9.9.10
+    - 149.112.112.10
+    - 2620:fe::10
+    - 2620:fe::fe:10
+  fallback_dns:
+    - 1.1.1.2
+  ratelimit: 0
+  dnssec_enabled: false
+  cache_size: 4194304
+  cache_ttl_min: 0
+  cache_ttl_max: 0
+  cache_optimistic: false
+  blocking_mode: default
+  blocked_response_ttl: 10
+  resolve_clients: true
+  use_private_ptr_resolvers: true
+  blocked_hosts:
+    - version.bind
+    - id.server
+    - hostname.bind
+filtering:
+  enabled: true
+  filtering_enabled: true
+  protection_enabled: true
+  blocked_services:
+    schedule:
+      time_zone: Local
+    ids: []
+  safe_search:
+    enabled: false
+    bing: true
+    duckduckgo: true
+    ecosia: true
+    google: true
+    pixabay: true
+    yandex: true
+    youtube: true
+querylog:
+  enabled: true
+  interval: 2160h
+statistics:
+  enabled: true
+  interval: 2160h
+filters:
+  - enabled: true
+    id: 1
+    name: AdGuard DNS filter
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt
+  - enabled: true
+    id: 2
+    name: AdAway Default Blocklist
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt
+  - enabled: true
+    id: 1775419568
+    name: HaGeZi's Pro Blocklist
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_48.txt
+  - enabled: true
+    id: 1775419569
+    name: uBlock₀ filters - Badware risks
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_50.txt
+  - enabled: true
+    id: 1776088897
+    name: HaGeZi's Pro++ Blocklist
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_51.txt
+  - enabled: true
+    id: 1776088898
+    name: HaGeZi's Ultimate Blocklist
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_49.txt
+  - enabled: true
+    id: 1776088899
+    name: bossjones pi-hole to adguard list
+    url: https://raw.githubusercontent.com/bossjones/dns-blocklist/refs/heads/main/stevenblack-blocklist-pihole-to-adguard.txt
+whitelist_filters: []
+user_rules: []
+clients:
+  persistent: []
+schema_version: 28

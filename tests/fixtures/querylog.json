@@ -1,0 +1,16 @@
+{
+  "oldest": "2024-01-01T00:00:00Z",
+  "data": [
+    {
+      "time": "2024-01-02T03:04:05Z",
+      "question": {"name": "ads.example.com", "type": "A", "class": "IN"},
+      "client": "10.0.0.5",
+      "elapsedMs": "1.23",
+      "status": "NOERROR",
+      "reason": "FilteredBlackList",
+      "cached": false,
+      "upstream": "https://unbound:5335",
+      "rules": [{"filter_list_id": 1, "text": "||ads.example.com^"}]
+    }
+  ]
+}

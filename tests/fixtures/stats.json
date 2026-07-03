@@ -1,0 +1,11 @@
+{
+  "num_dns_queries": 1000,
+  "num_blocked_filtering": 250,
+  "num_replaced_safebrowsing": 3,
+  "num_replaced_safesearch": 1,
+  "num_replaced_parental": 0,
+  "avg_processing_time": 0.0123,
+  "top_queried_domains": [{"example.com": 50}],
+  "top_blocked_domains": [{"ads.example.com": 40}],
+  "top_clients": [{"10.0.0.5": 300}]
+}

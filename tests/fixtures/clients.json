@@ -1,0 +1,16 @@
+{
+  "clients": [
+    {
+      "name": "laptop",
+      "ids": ["10.0.0.5", "AA:BB:CC:DD:EE:FF"],
+      "use_global_settings": true,
+      "filtering_enabled": false,
+      "tags": ["device_laptop"],
+      "unknown_future_field": 123
+    }
+  ],
+  "auto_clients": [
+    {"name": "phone", "ip": "10.0.0.6", "source": "ARP"}
+  ],
+  "supported_tags": ["device_laptop", "device_phone"]
+}
