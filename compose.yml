@@ -1,0 +1,75 @@
+# AdGuard Home for adguardctl integration tests.
+#
+#   docker compose up -d --wait   # start (web UI on http://localhost:3000)
+#   docker compose down -v        # stop and remove runtime volumes
+#
+# The instance is pre-seeded (see docker/adguardhome/AdGuardHome.yaml) with:
+#   username: admin
+#   password: test1234
+# so the first-run setup wizard is skipped and tests can authenticate.
+#
+# The seed is mounted read-only and copied into a named volume on startup, so
+# AdGuard Home's in-place config migrations never modify the tracked seed file.
+#
+# The stack mirrors the real architecture: AdGuard Home forwards to a recursive
+# Unbound resolver. Unbound is pinned to a static IP (172.28.0.53) because AGH
+# resolves upstream *hostnames* via bootstrap DNS, not Docker's embedded DNS — so
+# the seed references the upstream by IP, not by service name.
+services:
+  unbound:
+    build: ./docker/unbound
+    container_name: adguardctl-unbound
+    networks:
+      agh:
+        ipv4_address: 172.28.0.53
+    restart: "no"
+    healthcheck:
+      # busybox nslookup (drill is unreliable in this Alpine build); a successful
+      # recursive answer proves Unbound is up and resolving.
+      test: ["CMD", "nslookup", "-port=5335", "cloudflare.com", "127.0.0.1"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+
+  adguardhome:
+    image: adguard/adguardhome:v0.107.52
+    container_name: adguardctl-agh
+    depends_on:
+      unbound:
+        condition: service_healthy
+    ports:
+      - "3000:3000"   # web UI / control API
+    networks:
+      - agh
+    volumes:
+      - ./docker/adguardhome/AdGuardHome.yaml:/seed/AdGuardHome.yaml:ro
+      - agh-conf:/opt/adguardhome/conf
+      - agh-work:/opt/adguardhome/work
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        cp -f /seed/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml
+        exec /opt/adguardhome/AdGuardHome --no-check-update \
+          -c /opt/adguardhome/conf/AdGuardHome.yaml \
+          -w /opt/adguardhome/work
+    restart: "no"
+    healthcheck:
+      # Hit the (unauthenticated) web root; /control/status requires auth and
+      # would make wget report the container unhealthy even when it is up.
+      test: ["CMD", "wget", "-q", "-O-", "http://127.0.0.1:3000/"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 3s
+
+networks:
+  agh:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+
+volumes:
+  agh-conf:
+  agh-work:

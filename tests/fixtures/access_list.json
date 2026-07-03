@@ -1,0 +1,5 @@
+{
+  "allowed_clients": ["10.0.0.5"],
+  "disallowed_clients": ["10.0.0.99"],
+  "blocked_hosts": ["bad.example.com"]
+}

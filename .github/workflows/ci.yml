@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"  # weekly, Monday 06:00 UTC
+
+jobs:
+  lint-type-test:
+    name: lint / type / test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Ruff format check
+        run: uv run ruff format --check .
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Type check (ty)
+        run: uv run ty check
+
+      - name: Spell check
+        run: uv run codespell src tests
+
+      - name: Unit tests
+        run: uv run pytest -m "not slow"
+
+  integration:
+    name: integration (compose)
+    runs-on: ubuntu-latest
+    # Integration tests are heavier; run on schedule/manual, not every PR.
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Start AdGuard Home
+        run: docker compose up -d --wait
+
+      - name: Integration tests
+        run: uv run pytest -m integration --slow
+
+      - name: Stop AdGuard Home
+        if: always()
+        run: docker compose down -v

@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "server_name": "adguard.local",
+  "force_https": false,
+  "port_https": 443,
+  "port_dns_over_tls": 853,
+  "valid_cert": true,
+  "valid_chain": true,
+  "valid_key": true,
+  "valid_pair": true,
+  "subject": "CN=adguard.local",
+  "issuer": "CN=Test CA",
+  "not_before": "2024-01-01T00:00:00Z",
+  "not_after": "2030-01-01T00:00:00Z",
+  "dns_names": ["adguard.local"],
+  "warning_validation": ""
+}

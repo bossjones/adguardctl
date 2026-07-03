@@ -1,0 +1,38 @@
+# Python / uv
+.venv/
+__pycache__/
+*.pyc
+dist/
+build/
+*.egg-info/
+
+# Test & tooling caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.ty_cache/
+monkeytype.sqlite3
+
+# AdGuard Home container runtime (compose rewrites the seeded config in place;
+# keep the tracked seed but ignore any runtime work/backup artifacts)
+docker/adguardhome/AdGuardHome.yaml.bak
+docker/adguardhome/work/
+
+# Local Claude Code session tracking data
+.claude/data/
+
+# macOS / editors
+.DS_Store
+
+# Claude Code agent-hook output (session data, TTS, hook logs)
+.claude/settings.local.json
+logs/
+docker/adguardhome/logs/
+tests/fixtures/logs/
+
+# Local tooling / MCP
+.mcp.json
+.mcp.json.backup
+mise.local.toml

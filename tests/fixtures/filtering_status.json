@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "interval": 24,
+  "filters": [
+    {"id": 1, "enabled": true, "name": "AdGuard DNS filter", "url": "https://example.com/f.txt", "rules_count": 5000, "last_updated": "2024-01-01T00:00:00Z"}
+  ],
+  "whitelist_filters": [],
+  "user_rules": ["||ads.example.com^", "@@||good.example.com^", "# a comment"]
+}

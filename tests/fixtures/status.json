@@ -1,0 +1,1 @@
+{"version": "v0.107.50", "protection_enabled": true, "running": true, "dns_addresses": ["10.0.0.2"], "dns_port": 53, "http_port": 80, "language": "en", "dhcp_available": false, "protection_disabled_duration": 0}

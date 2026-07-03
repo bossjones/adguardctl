@@ -1,0 +1,13 @@
+{
+  "upstream_dns": ["127.0.0.1:5335"],
+  "bootstrap_dns": ["9.9.9.10"],
+  "fallback_dns": [],
+  "upstream_mode": "parallel",
+  "ratelimit": 20,
+  "dnssec_enabled": true,
+  "disable_ipv6": false,
+  "cache_size": 4194304,
+  "cache_ttl_min": 0,
+  "cache_ttl_max": 0,
+  "blocking_mode": "default"
+}
