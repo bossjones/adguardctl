@@ -64,6 +64,7 @@ reportAny = false
 line-length = 88
 target-version = "py312"
 src = ["src", "tests"]
+extend-exclude = [".claude"]
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -96,6 +97,8 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "S105", "S106", "SLF001", "PLR2004", "ANN", "D", "PT028"]
+# CI helper scripts are standalone entrypoints, not an importable package.
+"scripts/**/*.py" = ["INP001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -109,6 +112,7 @@ dev = [
     "codespell>=2.4.2",
     "funlog>=0.2.1",
     "monkeytype>=23.3.0",
+    "pyrefly>=1.1.1",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
@@ -123,3 +127,7 @@ dev = [
     "ruff>=0.15.20",
     "ty>=0.0.56",
 ]
+
+[tool.pyrefly]
+project-includes = ["src", "tests"]
+python-version = "3.12"
