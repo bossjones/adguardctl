@@ -86,3 +86,15 @@ clean:
 # Print the package version.
 version:
     @uv run python -c "import adguardctl; print(adguardctl.__version__)"
+
+# pyrefly type check (standalone; only fails on errors new since the baseline)
+check-pyrefly:
+    uv run pyrefly check --baseline pyrefly-baseline.json --summarize-errors
+
+# refresh the committed baseline after fixing/introducing errors
+pyrefly-baseline:
+    uv run pyrefly check --baseline pyrefly-baseline.json --update-baseline
+
+# type-coverage report (typed / Any / untyped) as JSON
+pyrefly-coverage:
+    uv run pyrefly coverage report src tests

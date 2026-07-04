@@ -1,0 +1,16 @@
+{
+  "errors": [
+    {
+      "line": 131,
+      "column": 28,
+      "stop_line": 131,
+      "stop_column": 45,
+      "path": "tests/unit/test_config.py",
+      "code": -2,
+      "name": "bad-argument-type",
+      "description": "Argument value `Literal[0]` violates Pydantic `gt` constraint `Literal[0]` for field `request_timeout`",
+      "concise_description": "Argument value `Literal[0]` violates Pydantic `gt` constraint `Literal[0]` for field `request_timeout`",
+      "severity": "error"
+    }
+  ]
+}
