@@ -87,6 +87,8 @@ clean:
 version:
     @uv run python -c "import adguardctl; print(adguardctl.__version__)"
 
+alias pyrefly := check-pyrefly
+
 # pyrefly type check (standalone; only fails on errors new since the baseline)
 check-pyrefly:
     uv run pyrefly check --baseline pyrefly-baseline.json --summarize-errors

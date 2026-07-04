@@ -96,6 +96,8 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "S105", "S106", "SLF001", "PLR2004", "ANN", "D", "PT028"]
+# CI helper scripts are standalone entrypoints, not an importable package.
+"scripts/**/*.py" = ["INP001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
