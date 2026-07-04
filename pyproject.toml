@@ -64,6 +64,7 @@ reportAny = false
 line-length = 88
 target-version = "py312"
 src = ["src", "tests"]
+extend-exclude = [".claude"]
 
 [tool.ruff.lint]
 select = ["ALL"]
